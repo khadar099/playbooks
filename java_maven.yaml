@@ -1,6 +1,6 @@
 ---
 - name: Install Java and Maven
-  hosts: all
+  hosts: webservers
   become: yes
   tasks:
 
