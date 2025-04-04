@@ -1,0 +1,98 @@
+1. Playbook Basics:
+yaml
+Copy
+---
+- name: Install Java and Maven
+  hosts: webservers
+  become: yes
+  tasks:
+name: This is just a description of the playbook. In this case, it's saying that the playbook will install Java and Maven.
+
+hosts: webservers: This specifies the group of hosts where the playbook will run. The group webservers is defined in your Ansible inventory, which could be a list of IPs or hostnames of machines you want to run these tasks on.
+
+become: yes: This indicates that the tasks in this playbook should be executed with elevated (sudo) privileges. This is necessary because installing software like Java and Maven usually requires administrator rights.
+
+2. Installing OpenJDK 11
+yaml
+Copy
+- name: Install Java (OpenJDK 11)
+  apt:
+    name: openjdk-11-jdk
+    state: present
+    update_cache: yes
+name: The task name, which is "Install Java (OpenJDK 11)".
+
+apt: This module is used to manage packages on Debian-based systems (like Ubuntu).
+
+name: openjdk-11-jdk: This specifies the package name to install, which is openjdk-11-jdk (this is the OpenJDK 11 package).
+
+state: present: This ensures that the package is installed. If it's already installed, it won't do anything; if not, it will install it.
+
+update_cache: yes: This tells Ansible to update the local package cache before trying to install the package. It's like running apt update on the command line.
+
+3. Verifying Java Installation
+yaml
+Copy
+- name: Verify Java installation
+  command: java -version
+  register: java_version
+  ignore_errors: yes
+name: The task name is "Verify Java installation".
+
+command: java -version: This runs the command java -version on the target host to check if Java is properly installed and to display its version.
+
+register: java_version: This saves the output of the command to a variable called java_version. You can then use this variable later in the playbook.
+
+ignore_errors: yes: This tells Ansible to continue executing the playbook even if this task fails. For example, if Java is not installed properly, it will still proceed to the next task.
+
+4. Display Java Version
+yaml
+Copy
+- name: Display Java version
+  debug:
+    msg: "Java version installed: {{ java_version.stdout }}"
+name: The task name is "Display Java version".
+
+debug: This module prints the value of a variable or expression to the Ansible output.
+
+msg: "Java version installed: {{ java_version.stdout }}": This will display the version of Java that was installed. The {{ java_version.stdout }} syntax is how you access the standard output from the previous java -version command, which was saved in the java_version variable.
+
+5. Installing Maven
+yaml
+Copy
+- name: Install Maven
+  apt:
+    name: maven
+    state: present
+name: The task name is "Install Maven".
+
+apt: Again, using the apt package manager to install Maven.
+
+name: maven: This is the name of the package to install, which is simply maven.
+
+state: present: Ensures Maven is installed on the host.
+
+6. Verifying Maven Installation
+yaml
+Copy
+- name: Verify Maven installation
+  command: mvn -v
+  register: maven_version
+  ignore_errors: yes
+name: The task name is "Verify Maven installation".
+
+command: mvn -v: This runs the mvn -v command on the target host to verify Maven installation and show the version.
+
+register: maven_version: This saves the output of the mvn -v command in the variable maven_version.
+
+ignore_errors: yes: This ensures that the playbook continues even if the mvn command fails.
+
+7. Display Maven Version
+yaml
+Copy
+- name: Display Maven version
+  debug:
+    msg: "Maven version installed: {{ maven_version.stdout }}"
+name: The task name is "Display Maven version".
+
+debug: This prints out the value of maven_version.stdout (which is the output of the mvn -v command) to show the installed Maven version.
